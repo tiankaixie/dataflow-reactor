@@ -28,7 +28,7 @@ export function DashboardSetting() {
         <div className="mb-2 mt-4 text-xs font-semibold">Parameters</div>
         <Select>
           <SelectTrigger>
-            <SelectValue placeholder="Select a fruit" />
+            <SelectValue placeholder="Select" />
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>

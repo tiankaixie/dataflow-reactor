@@ -15,14 +15,14 @@ services:
   api:
     build: ./api
     ports:
-      - "5000:80"
+      - "5000:5000"
     volumes:
       - ./api:/api
     depends_on:
       - mongodb
     environment:
       - MONGO_HOST=mongodb
-    command: uvicorn server:app --host 0.0.0.0 --port 80
+    command: uvicorn server:app --host 0.0.0.0 --port 5000
 
   mongodb:
     image: mongo
