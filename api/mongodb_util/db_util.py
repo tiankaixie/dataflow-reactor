@@ -81,7 +81,6 @@ def getDocuments(collection_name: str, query: Dict[str, any]):
 
 def getDocument(collection_name: str, query: Dict[str, any]):
     client = getClient()
-    print("EFJOIejfowifjLFJWOIEJFIJOWEIOFJGETTING THE DATABASE")
     db = client[clientInfo["database"]]
     collection = db[collection_name]
     exclusion = {"_id": 0}

@@ -21,11 +21,9 @@ export default function Heatmap() {
   }, [fetchData, heatmapDataID])
 
   if (data) {
-    return (
-      <div>
-        <HeatmapCore data={data} />
-      </div>
-    )
+    console.log("data!!!!!!!!!!!!!@#!@#!@#!#!@#!@#")
+    console.log(data)
+    return <HeatmapCore data={data} />
   }
 
   return <div>Empty</div>

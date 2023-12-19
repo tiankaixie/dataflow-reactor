@@ -24,4 +24,8 @@ const createHeatmapDataAtom = () => {
 export const [heatmapDataDemoAtom, loadHeatmapDataDemoAtom] =
   createHeatmapDataAtom()
 
-export const heatmapDataIDAtom = atom<string | null>("demo")
+export const heatmapDataIDAtom = atom<string | null>(
+  // "pd_scores_pinn_dim3_beta_lr_seed"
+  // "mt_scores_resnet18_dim3_bs_width_seed"
+  "pd_scores_resnet18_dim3_bs_width_seed"
+)
