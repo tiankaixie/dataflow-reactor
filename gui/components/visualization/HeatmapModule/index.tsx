@@ -6,6 +6,7 @@ import { useAtom } from "jotai"
 import {
   heatmapDataDemoAtom,
   heatmapDataIDAtom,
+  landscape1dDataIDAtom,
   loadHeatmapDataDemoAtom,
 } from "@/lib/store"
 
@@ -15,15 +16,14 @@ export default function Heatmap() {
   const [data] = useAtom(heatmapDataDemoAtom)
   const [, fetchData] = useAtom(loadHeatmapDataDemoAtom)
   const [heatmapDataID] = useAtom(heatmapDataIDAtom)
+  const [, setLandscape1DDataID] = useAtom(landscape1dDataIDAtom)
 
   useEffect(() => {
     fetchData(heatmapDataID)
   }, [fetchData, heatmapDataID])
 
   if (data) {
-    console.log("data!!!!!!!!!!!!!@#!@#!@#!#!@#!@#")
-    console.log(data)
-    return <HeatmapCore data={data} />
+    return <HeatmapCore data={data} onClickHandler={setLandscape1DDataID} />
   }
 
   return <div>Empty</div>

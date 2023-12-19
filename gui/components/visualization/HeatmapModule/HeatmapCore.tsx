@@ -8,7 +8,8 @@ import { HeatmapData } from "./heatmapTypes"
 function render(
   svgRef: React.RefObject<SVGSVGElement>,
   wraperRef: React.RefObject<HTMLDivElement>,
-  data: HeatmapData
+  data: HeatmapData,
+  onClickHandler: any
 ) {
   const divElement = wraperRef.current
   const width = divElement.clientWidth
@@ -30,7 +31,6 @@ function render(
     .select("g")
     .attr("transform", `translate(${margin.left},${margin.top})`)
 
-  console.log(data)
   const xScale = d3.scaleBand().range([0, w]).domain(data.yLabels)
 
   const yScale = d3
@@ -69,7 +69,15 @@ function render(
     .attr("class", "row")
     .attr("transform", (_d, i) => `translate(0, ${yScale(data.xLabels[i])})`)
 
-  const row = rows.selectAll(".cell").data((d) => d)
+  const row = rows.selectAll(".cell").data((d, rowID) => {
+    return d.map((value, colID) => {
+      return {
+        rowID,
+        colID,
+        value,
+      }
+    })
+  })
 
   row
     .join("rect")
@@ -78,7 +86,32 @@ function render(
     .attr("y", 0)
     .attr("width", xScale.bandwidth())
     .attr("height", xScale.bandwidth())
-    .style("fill", (d) => color(d))
+    .style("fill", (d) => color(d.value))
+    .on("mouseover", function (event, d) {
+      d3.select(this).style("stroke", "#666").style("stroke-width", "2px")
+      d3.select(this).style("cursor", "pointer")
+      d3.select(this).style("stroke-opacity", 1)
+      d3.select(this).style("stroke-dasharray", "5,5")
+    })
+    .on("mouseout", function (event, d) {
+      d3.select(this).style("stroke", "none")
+      d3.select(this).style("stroke-opacity", 0)
+      d3.select(this).style("stroke-dasharray", "none")
+    })
+    .on("click", function (event, d) {
+      console.log(data.xName)
+      console.log(data.yName)
+      console.log(data.xLabels[d.rowID], data.yLabels[d.colID], d.value)
+      // const selectedCell =
+      //   "high_dim3_hessian_resnet18_loss_landscape_cifar10_subset_01_bs_" +
+      //   data.yLabels[d.colID] +
+      //   "_seed_4_type_best_width_" +
+      //   data.xLabels[d.rowID] +
+      //   "_UnstructuredGrid_aknn_PersistenceThreshold_0.0_ThresholdIsAbsolute_0"
+      // console.log(selectedCell)
+      const selectedCell = data.yLabels[d.colID] + "_" + data.xLabels[d.rowID]
+      onClickHandler(selectedCell)
+    })
 
   const xAxis = svg.selectAll(".xAxis").data([1])
 
@@ -160,45 +193,17 @@ function render(
     .attr("y", 5)
     .attr("font-size", "12px")
     .attr("fill", "#666")
-    .text("Number")
-  //
-  // // const zoom = d3
-  // //   .zoom()
-  // //   .on("zoom", zoomed)
-  // //   .extent([
-  // //     [0, 0],
-  // //     [width, height],
-  // //   ])
-  // //   .scaleExtent([0.5, 8])
-  // //
-  // // svgbase.call(zoom)
-  // //
-  // // const zoomContainer = svgbase.select(".zoom-container")
-  // //
-  // // function zoomed(event) {
-  // //   zoomContainer.attr("transform", event.transform)
-  // // }
-  //
-  // svg
-  //   .selectAll(".figure-label")
-  //   .data([1])
-  //   .join("text")
-  //   .attr("class", "figure-label")
-  //   .attr("x", 20)
-  //   .attr("y", -10)
-  //   .attr("font-size", "0.8rem")
-  //   .attr("font-weight", "bold")
-  //   .attr("text-anchor", "start ")
-  //   .attr("fill", "#666")
-  //   .text("Loss 2D HeatMap [Seed " + data.modeId + "]")
+    .text("Value")
 }
 
 interface HeatmapCoreProps {
   data: HeatmapData
+  onClickHandler: any
 }
 
 export default function HeatmapCore({
   data,
+  onClickHandler,
 }: HeatmapCoreProps): React.JSX.Element {
   const svg = React.useRef<SVGSVGElement>(null)
   const wraperRef = React.useRef<HTMLDivElement>(null)
@@ -223,7 +228,7 @@ export default function HeatmapCore({
 
   React.useEffect(() => {
     if (!data) return
-    render(svg, wraperRef, data)
+    render(svg, wraperRef, data, onClickHandler)
   }, [data])
 
   return (
