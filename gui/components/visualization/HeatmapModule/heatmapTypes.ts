@@ -4,5 +4,5 @@ export interface HeatmapData {
   yName: string
   xLabels: string[]
   yLabels: string[]
-  data: number[][]
+  data: number[]
 }

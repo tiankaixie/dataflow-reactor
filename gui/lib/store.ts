@@ -3,7 +3,11 @@ import { atom } from "jotai"
 import { HeatmapData } from "@/components/visualization/HeatmapModule/heatmapTypes"
 import { Landscape1dData } from "@/components/visualization/Landscape1DModule/landscape1dTypes"
 
-import { fetchHeatmapData, fetchLandscape1DData } from "./api"
+import {
+  fetchHeatmapData,
+  fetchHeatmapDataIDs,
+  fetchLandscape1DData,
+} from "./api"
 
 /***
  *
@@ -31,6 +35,21 @@ export const heatmapDataIDAtom = atom<string | null>(
   "pd_scores_resnet18_dim3_bs_width_seed"
 )
 
+const createHeatmapDataIDsAtom = () => {
+  const baseAtom = atom<string[] | Promise<String[]> | null>(null)
+  const valueAtom = atom((get) => get(baseAtom))
+  const loadAtom = atom(null, async (_get, set) => {
+    const promise = fetchHeatmapDataIDs().then((data: string[]) => {
+      return data
+    })
+    set(baseAtom, promise)
+  })
+  return [valueAtom, loadAtom]
+}
+
+export const [heatmapDataIDsAtom, loadHeatmapDataIDsAtom] =
+  createHeatmapDataIDsAtom()
+
 /***
  *
  * Landscape1DData
@@ -45,7 +64,6 @@ const createLandscape1DDataAtom = () => {
   const loadAtom = atom(null, async (get, set) => {
     const landscape1dDataID = get(landscape1dDataIDAtom)
     if (!landscape1dDataID) return
-    console.log("landscape1dDataID", landscape1dDataID)
     const promise = fetchLandscape1DData(landscape1dDataID).then(
       (data: Landscape1dData) => {
         return data

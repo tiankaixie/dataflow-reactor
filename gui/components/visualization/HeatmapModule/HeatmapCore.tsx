@@ -31,14 +31,14 @@ function render(
     .select("g")
     .attr("transform", `translate(${margin.left},${margin.top})`)
 
-  const xScale = d3.scaleBand().range([0, w]).domain(data.yLabels)
+  const xScale = d3.scaleBand().range([0, w]).domain(data.xLabels)
 
   const yScale = d3
     .scaleBand()
-    .domain(data.xLabels)
-    .range([xScale.bandwidth() * data.xLabels.length, 0])
+    .domain(data.yLabels)
+    .range([xScale.bandwidth() * data.yLabels.length, 0])
 
-  const rows = svg.selectAll(".row").data(data.data)
+  const cells = svg.selectAll(".cell").data(data.data)
 
   const customizedColors = [
     "#004477",
@@ -64,29 +64,16 @@ function render(
 
   const color = d3.scaleLinear().domain(domainSteps).range(customizedColors)
 
-  rows
-    .join("g")
-    .attr("class", "row")
-    .attr("transform", (_d, i) => `translate(0, ${yScale(data.xLabels[i])})`)
-
-  const row = rows.selectAll(".cell").data((d, rowID) => {
-    return d.map((value, colID) => {
-      return {
-        rowID,
-        colID,
-        value,
-      }
-    })
-  })
-
-  row
+  cells
     .join("rect")
     .attr("class", "cell")
-    .attr("x", (_d, i) => xScale(data.yLabels[i]))
-    .attr("y", 0)
+    .attr("x", (_d, i) => xScale(data.xLabels[i % data.xLabels.length]))
+    .attr("y", (_d, i) =>
+      yScale(data.yLabels[Math.floor(i / data.xLabels.length)])
+    )
     .attr("width", xScale.bandwidth())
     .attr("height", xScale.bandwidth())
-    .style("fill", (d) => color(d.value))
+    .style("fill", (d) => color(d))
     .on("mouseover", function (event, d) {
       d3.select(this).style("stroke", "#666").style("stroke-width", "2px")
       d3.select(this).style("cursor", "pointer")
@@ -229,7 +216,7 @@ export default function HeatmapCore({
   React.useEffect(() => {
     if (!data) return
     render(svg, wraperRef, data, onClickHandler)
-  }, [data])
+  }, [data, onClickHandler])
 
   return (
     <div ref={wraperRef} className="h-full w-full">
