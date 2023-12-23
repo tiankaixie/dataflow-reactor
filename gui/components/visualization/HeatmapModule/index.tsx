@@ -26,5 +26,5 @@ export default function Heatmap() {
     return <HeatmapCore data={data} onClickHandler={setLandscape1DDataID} />
   }
 
-  return <div>Empty</div>
+  return <div>Loading...</div>
 }

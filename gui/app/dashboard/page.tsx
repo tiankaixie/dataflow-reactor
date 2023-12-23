@@ -3,7 +3,7 @@ import Landscape1D from "@/components/visualization/Landscape1DModule"
 
 export default function Dashboard() {
   return (
-    <section className="ml-60 container  px-2 pt-4">
+    <section className=" container mx-auto px-2 pt-4">
       <div className="col-span-12 ">
         <h1 className="text-black font-bold text-5xl">
           Model Parameter Heatmap and Landscape 1D profile

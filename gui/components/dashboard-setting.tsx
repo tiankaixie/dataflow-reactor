@@ -60,11 +60,11 @@ export function DashboardSetting() {
   return (
     <div className="fixed top-0 m-2 hidden h-[calc(100vh-1rem)] w-56 border  flex-col justify-between  p-2 lg:flex ">
       <div className="px-2">
-        <Link href="/" className="flex items-center space-x-2">
-          <span className="font-title my-3 mb-5 inline-block text-lg">
-            {siteConfig.name}
-          </span>
-        </Link>
+        {/* <Link href="/" className="flex items-center space-x-2"> */}
+        {/*   <span className="font-title my-3 mb-5 inline-block text-lg"> */}
+        {/*     {siteConfig.name} */}
+        {/*   </span> */}
+        {/* </Link> */}
         <div className="mb-2 mt-4 text-xs font-semibold">Parameters</div>
         <Select
           onValueChange={(value: string) => {
