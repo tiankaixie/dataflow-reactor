@@ -3,12 +3,19 @@ import Landscape1D from "@/components/visualization/Landscape1DModule"
 
 export default function Dashboard() {
   return (
-    <section className="ml-60 grid grid-cols-12 items-center gap-6 p-2">
-      <div className="col-span-4 aspect-square">
-        <Heatmap />
+    <section className="ml-60 container  px-2 pt-4">
+      <div className="col-span-12 ">
+        <h1 className="text-black font-bold text-5xl">
+          Model Parameter Heatmap and Landscape 1D profile
+        </h1>
       </div>
-      <div className="col-span-4 aspect-square">
-        <Landscape1D />
+      <div className=" grid grid-cols-12 content-center gap-6 h-[calc(100vh-6rem)] ">
+        <div className="col-span-4 aspect-square">
+          <Heatmap />
+        </div>
+        <div className="col-span-4 aspect-square">
+          <Landscape1D />
+        </div>
       </div>
     </section>
   )

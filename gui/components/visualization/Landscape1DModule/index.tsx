@@ -27,5 +27,5 @@ export default function Landscape1D() {
     return <Landscape1DCore data={data} />
   }
 
-  return <div>Empty</div>
+  return <div></div>
 }

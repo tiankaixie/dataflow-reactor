@@ -18,8 +18,8 @@ function render(
   const margin = {
     top: 30,
     right: 30,
-    bottom: 50,
-    left: 50,
+    bottom: 70,
+    left: 70,
   }
   const h = height - margin.top - margin.bottom
   const w = width - margin.left - margin.right
@@ -41,16 +41,16 @@ function render(
   const cells = svg.selectAll(".cell").data(data.data)
 
   const customizedColors = [
-    "#004477",
-    "#305685",
-    "#4d6994",
-    "#677da3",
-    "#8091b2",
-    "#99a6c1",
-    "#b2bcd0",
-    "#cbd2e0",
-    "#e5e8ef",
-    "#ffffff",
+    "#000004", // Black
+    "#1B0C41", // Very Dark Blue
+    "#4A0C6B", // Dark Purple
+    "#781C6D", // Dark Magenta
+    "#A52C60", // Crimson
+    "#CF4446", // Dark Red
+    "#ED6925", // Burnt Orange
+    "#FB9F3A", // Orange
+    "#F7D642", // Yellow
+    "#FCFFA4", // Pale Yellow
   ]
 
   const lowerBound = d3.min(data.data.flat()) as number
@@ -75,15 +75,16 @@ function render(
     .attr("height", xScale.bandwidth())
     .style("fill", (d) => color(d))
     .on("mouseover", function (event, d) {
-      d3.select(this).style("stroke", "#666").style("stroke-width", "2px")
-      d3.select(this).style("cursor", "pointer")
-      d3.select(this).style("stroke-opacity", 1)
-      d3.select(this).style("stroke-dasharray", "5,5")
+      d3.select(this)
+        .raise()
+        .style("stroke", "Blue")
+        .style("stroke-width", "2px")
+        .style("cursor", "pointer")
+        .style("stroke-opacity", 1)
     })
     .on("mouseout", function (event, d) {
       d3.select(this).style("stroke", "none")
       d3.select(this).style("stroke-opacity", 0)
-      d3.select(this).style("stroke-dasharray", "none")
     })
     .on("click", function (event, d) {
       console.log(data.xName)
@@ -107,7 +108,7 @@ function render(
     .attr("class", "xAxis")
     .attr(
       "transform",
-      `translate(0, ${xScale.bandwidth() * data.xLabels.length})`
+      `translate(0, ${yScale.bandwidth() * data.yLabels.length})`
     )
     .call(d3.axisBottom(xScale).tickSize(0))
 
@@ -118,6 +119,24 @@ function render(
     .attr("class", "yAxis")
     .attr("transform", `translate(${0}, ${0})`)
     .call(d3.axisLeft(yScale).tickSize(0))
+
+  svg
+    .selectAll(".yLabel")
+    .data([data.yName])
+    .join("text")
+    .text((d) => d)
+    .attr("class", "yLabel")
+    .attr("x", -40)
+    .attr("y", -10)
+
+  svg
+    .selectAll(".xLabel")
+    .data([data.xName])
+    .join("text")
+    .text((d) => d)
+    .attr("class", "xLabel")
+    .attr("x", w / 2)
+    .attr("y", yScale.bandwidth() * data.yLabels.length + 30)
 
   const legend = svg.selectAll(".legend").data([1])
   let lg = svg
@@ -139,7 +158,7 @@ function render(
   legend
     .join("rect")
     .attr("class", "legend")
-    .attr("y", xScale.bandwidth() * data.xLabels.length + 20)
+    .attr("y", yScale.bandwidth() * data.yLabels.length + 40)
     .attr("x", 40)
     .attr("height", 10)
     .attr("width", w - 40)
@@ -158,7 +177,7 @@ function render(
     .attr("class", "legendAxis")
     .attr(
       "transform",
-      `translate(40, ${xScale.bandwidth() * data.xLabels.length + 30})`
+      `translate(40, ${yScale.bandwidth() * data.yLabels.length + 50})`
     )
     .call(d3.axisBottom(legendScale).ticks(5))
 
