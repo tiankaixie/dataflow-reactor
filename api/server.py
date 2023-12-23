@@ -15,22 +15,33 @@ def read_root():
 async def get_heatmap_data(heatmap_id: str):
     data = getDocument("testheatmap", {"heatmap_id": heatmap_id})
     data = data['data']
-    learning_rates = data.keys()
-    betas = data[list(learning_rates)[0]].keys()
-    learning_rates = list(learning_rates)
-    betas = list(betas)
+    ylabels = data.keys()
+    xlabels = data[list(ylabels)[0]].keys()
+    ylabels = list(ylabels)
+    xlabels = list(xlabels)
     res_data = []
-    for learning_rate in learning_rates:
-        for beta in betas:
-            res_data.append(data[learning_rate][beta])
+    for ylabel in ylabels:
+        for xlabel in xlabels:
+            res_data.append(data[ylabel][xlabel])
 
-    res = {
-        "data": res_data,
-        "xName": "Beta",
-        "yName": "Learning Rate",
-        "xLabels": betas,
-        "yLabels": learning_rates,
-    }
+    if "beta" in heatmap_id and "lr" in heatmap_id:
+        res = {
+            "data": res_data,
+            "xName": "Beta",
+            "yName": "Learning Rate",
+            "xLabels": xlabels,
+            "yLabels": ylabels,
+        }
+    elif "bs" in heatmap_id and "width" in heatmap_id:
+        res = {
+            "data": res_data,
+            "xName": "Batch Size",
+            "yName": "Width",
+            "xLabels": xlabels,
+            "yLabels": ylabels,
+        }
+    else:
+        res = None
 
     return JSONResponse(content=res)
 
