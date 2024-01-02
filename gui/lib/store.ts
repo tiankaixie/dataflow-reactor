@@ -56,7 +56,8 @@ export const [heatmapDataIDsAtom, loadHeatmapDataIDsAtom] =
  *
  * */
 
-export const landscape1dDataIDAtom = atom<string | null>(null)
+// 0 is prefix, 1 is suffix
+export const landscape1dDataIDAtom = atom<string[] | null>(null)
 
 const createLandscape1DDataAtom = () => {
   const baseAtom = atom<Landscape1dData | Promise<Landscape1dData> | null>(null)
@@ -66,6 +67,7 @@ const createLandscape1DDataAtom = () => {
     if (!landscape1dDataID) return
     const promise = fetchLandscape1DData(landscape1dDataID).then(
       (data: Landscape1dData) => {
+        console.log("LLANDSCAPEQ1d data", data)
         return data
       }
     )

@@ -53,8 +53,8 @@ function render(
     "#FCFFA4", // Pale Yellow
   ]
 
-  const lowerBound = d3.min(data.data.flat()) as number
-  const upperBound = d3.max(data.data.flat()) as number
+  const lowerBound = d3.min(data.data.map((d) => d.value).flat()) as number
+  const upperBound = d3.max(data.data.map((d) => d.value).flat()) as number
 
   const domainSteps = customizedColors.map((_color, i) => {
     return (
@@ -73,7 +73,7 @@ function render(
     )
     .attr("width", xScale.bandwidth())
     .attr("height", xScale.bandwidth())
-    .style("fill", (d) => color(d))
+    .style("fill", (d) => color(d.value))
     .on("mouseover", function (event, d) {
       d3.select(this)
         .raise()
@@ -87,18 +87,8 @@ function render(
       d3.select(this).style("stroke-opacity", 0)
     })
     .on("click", function (event, d) {
-      console.log(data.xName)
-      console.log(data.yName)
-      console.log(data.xLabels[d.rowID], data.yLabels[d.colID], d.value)
-      // const selectedCell =
-      //   "high_dim3_hessian_resnet18_loss_landscape_cifar10_subset_01_bs_" +
-      //   data.yLabels[d.colID] +
-      //   "_seed_4_type_best_width_" +
-      //   data.xLabels[d.rowID] +
-      //   "_UnstructuredGrid_aknn_PersistenceThreshold_0.0_ThresholdIsAbsolute_0"
-      // console.log(selectedCell)
-      const selectedCell = data.yLabels[d.colID] + "_" + data.xLabels[d.rowID]
-      onClickHandler(selectedCell)
+      console.log(d)
+      onClickHandler([d.prefix, d.suffix])
     })
 
   const xAxis = svg.selectAll(".xAxis").data([1])

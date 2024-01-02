@@ -2,6 +2,7 @@ from pickle import TRUE
 import pymongo
 import json
 import os
+import re
 from typing import Dict
 
 
@@ -78,6 +79,18 @@ def getDocuments(collection_name: str, query: Dict[str, any]):
     query_res = collection.find(query, exclusion)
     return query_res
 
+def findDocumentsWithPrefixAndSuffix(collection_name: str, query_str: str, prefix: str, suffix: str):
+    client = getClient()
+    db = client[clientInfo["database"]]
+    collection = db[collection_name]
+    exclusion = {"_id": 0}
+    escape_prefix = re.escape(prefix)
+    escape_suffix = re.escape(suffix)
+    pattern = f"^{escape_prefix}.*{escape_suffix}"
+    query_res = collection.find({query_str: {"$regex": pattern}}, exclusion)
+    query_res = [r for r in query_res]
+    print(str(len(query_res)) + " results found.")
+    return query_res
 
 def getDocument(collection_name: str, query: Dict[str, any]):
     client = getClient()

@@ -16,8 +16,8 @@ function render(
 
   const margin = {
     top: 30,
-    right: 30,
-    bottom: 50,
+    right: 0,
+    bottom: 70,
     left: 50,
   }
   const h = height - margin.top - margin.bottom
@@ -31,7 +31,6 @@ function render(
     .attr("transform", `translate(${margin.left},${margin.top})`)
 
   const points = data.points
-  console.log(points)
   const loss_max = d3.max(points, (p) => d3.max(p, (d) => d[1]))
   const loss_min = d3.min(points, (p) => d3.min(p, (d) => d[1]))
   const x_max = d3.max(points, (p) => d3.max(p, (d) => d[0]))
@@ -111,22 +110,37 @@ function render(
 
   // Add the x-axis.
   svg
-    .append("g")
+    .selectAll(".xAxis")
+    .data([data])
+    .join("g")
+    .attr("class", "xAxis")
     .attr("transform", `translate(0,${height - margin.bottom})`)
     .call(d3.axisBottom(xScale))
 
   // Add the y-axis.
   svg
-    .append("g")
+    .selectAll(".yAxis")
+    .data([data])
+    .join("g")
+    .attr("class", "yAxis")
     .attr("transform", `translate(${margin.left},0)`)
     .call(d3.axisLeft(yScale))
 
   svg
-    .append("text")
+    .selectAll(".yLabel")
+    .data([data.yName])
+    .join("text")
     .attr("x", 15)
     .attr("y", 15)
     .attr("text-anchor", "start")
     .text("Loss")
+
+  svg
+    .selectAll(".xAxis .tick text")
+    .style("text-anchor", "end")
+    .attr("dx", "-.8em") // Adjust position to fit your design
+    .attr("dy", ".15em") // Adjust position to fit your design
+    .attr("transform", "rotate(-45)") // Rotate the text to 45 degrees
 }
 
 interface Landscape1dCoreProps {

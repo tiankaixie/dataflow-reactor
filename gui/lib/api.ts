@@ -5,8 +5,10 @@ export const fetchHeatmapData = async (heatmapID: string) => {
   return await response.data
 }
 
-export const fetchLandscape1DData = async (landscape1dDataID: string) => {
-  const response = await axios.get(`api/landscape1d-data/${landscape1dDataID}`)
+export const fetchLandscape1DData = async (landscape1dDataID: string[]) => {
+  const response = await axios.get(
+    `api/landscape1d-data/${landscape1dDataID[0]}/${landscape1dDataID[1]}`
+  )
   return await response.data
 }
 

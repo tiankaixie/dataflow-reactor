@@ -4,11 +4,8 @@ import { useEffect } from "react"
 import { useAtom } from "jotai"
 
 import {
-  heatmapDataDemoAtom,
-  heatmapDataIDAtom,
   landscape1dDataDemoAtom,
   landscape1dDataIDAtom,
-  loadHeatmapDataDemoAtom,
   loadLandscape1dDataDemoAtom,
 } from "@/lib/store"
 
@@ -24,7 +21,16 @@ export default function Landscape1D() {
   }, [fetchData, landscape1dDataID])
 
   if (data) {
-    return <Landscape1DCore data={data} />
+    console.log("Landscape1D Data obtained: ")
+    console.log(data)
+    const landscapeComponents = data.map((d) => {
+      return (
+        <div className="col-span-1 aspect-square">
+          <Landscape1DCore data={d} />
+        </div>
+      )
+    })
+    return <div className="grid grid-cols-3">{landscapeComponents}</div>
   }
 
   return <div></div>

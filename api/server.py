@@ -2,7 +2,7 @@ from fastapi import FastAPI
 import json
 from fastapi.responses import JSONResponse
 
-from mongodb_util.db_util import getDocument, getDocuments
+from mongodb_util.db_util import getDocument, getDocuments, findDocumentsWithPrefixAndSuffix
 
 app = FastAPI()
 
@@ -19,10 +19,29 @@ async def get_heatmap_data(heatmap_id: str):
     xlabels = data[list(ylabels)[0]].keys()
     ylabels = list(ylabels)
     xlabels = list(xlabels)
+    print("wefwfwew")
+    print(ylabels)
+    print(xlabels)
     res_data = []
     for ylabel in ylabels:
         for xlabel in xlabels:
-            res_data.append(data[ylabel][xlabel])
+            # here build the string of the data
+            if "beta" in heatmap_id and "lr" in heatmap_id:
+                res_data.append({
+                    "yLabel": ylabel,
+                    "xLabel": xlabel,
+                    "prefix": "high_dim3_hessian_pinn_pretrained_convection_u0sin(x)_nu0.0_beta" + xlabel + "_rho0.0_Nf100_50,50,50,50,1_L1.0_lr" + ylabel+"_source0_",
+                    "suffix": "_dim3_points9261_UnstructuredGrid_aknn_", 
+                    "value": data[ylabel][xlabel]
+                })
+            elif "bs" in heatmap_id and "width" in heatmap_id:
+                res_data.append({
+                    "yLabel": ylabel,
+                    "xLabel": xlabel,
+                    "prefix": "high_dim3_hessian_resnet18_loss_landscape_cifar10_subset_01_bs_" + xlabel  + "_",
+                    "suffix": "_type_best_width_" + ylabel + "_UnstructuredGrid_aknn_PersistenceThreshold_",
+                    "value": data[ylabel][xlabel]
+                })
 
     if "beta" in heatmap_id and "lr" in heatmap_id:
         res = {
@@ -46,9 +65,9 @@ async def get_heatmap_data(heatmap_id: str):
     return JSONResponse(content=res)
 
 
-@app.get("/landscape1d-data/{landscape1d_id}")
-async def get_landscape1d_data(landscape1d_id: str):
-    data = getDocument("testlandscape1d", {"landscape1d_id": landscape1d_id})
+@app.get("/landscape1d-data/{landscape1d_id_prefix}/{landscape1d_id_suffix}")
+async def get_landscape1d_data(landscape1d_id_prefix: str, landscape1d_id_suffix: str):
+    data = findDocumentsWithPrefixAndSuffix("testlandscape1d", "landscape1d_id", landscape1d_id_prefix, landscape1d_id_suffix)
     return JSONResponse(content=data)
 
 
