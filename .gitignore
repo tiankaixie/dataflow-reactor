@@ -1,3 +1,3 @@
 __pycache__
 .DS_Store
-api/mongodb_util/basin_points/*
+basin_points
