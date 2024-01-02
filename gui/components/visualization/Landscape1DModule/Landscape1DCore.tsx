@@ -16,9 +16,9 @@ function render(
 
   const margin = {
     top: 30,
-    right: 0,
+    right: 30,
     bottom: 70,
-    left: 50,
+    left: 30,
   }
   const h = height - margin.top - margin.bottom
   const w = width - margin.left - margin.right
@@ -56,7 +56,7 @@ function render(
     .join("rect")
     .attr("x", margin.left)
     .attr("y", margin.top)
-    .attr("width", w)
+    .attr("width", w - margin.right)
     .attr("height", h)
     .attr("stroke", "#6D8387")
     .attr("fill", "#6D8387")
@@ -71,10 +71,10 @@ function render(
     //.attr("stroke", "rgba(78,103,207,1)")
     //.attr("fill", "steelblue")
     //.attr("opacity", 0.5)
-    .attr("stroke", "#000")
+    .attr("stroke", "#ccc")
     .attr("fill", "white")
-    .attr("opacity", 1.0)
-    .attr("stroke-width", "1")
+    .attr("opacity", 1)
+    .attr("stroke-width", "0.5")
 
   // svg
   //   .selectAll("circle")
